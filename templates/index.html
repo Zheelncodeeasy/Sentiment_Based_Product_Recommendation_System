@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Product Recommendations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      /* dark navy */
+      --card: #071426;
+      --accent: #06b6d4;
+      /* cyan */
+      --accent-2: #60ddea;
+      --muted: #94a3b8;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-2: rgba(255, 255, 255, 0.02);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: linear-gradient(180deg, var(--bg), #071128);
+      color: #e6eef8;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: linear-gradient(180deg, #071426 0%, rgba(7, 20, 38, 0.8) 100%);
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(2, 6, 23, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.02)
+    }
+
+    /* header */
+    .header {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #022;
+      font-weight: 800;
+      box-shadow: 0 8px 20px rgba(6, 182, 212, 0.14)
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px
+    }
+
+    /* form */
+    .search-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.02);
+      color: inherit;
+      outline: none;
+      font-size: 15px;
+      transition: box-shadow .18s, border-color .18s
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(230, 238, 248, 0.45)
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.06);
+      border-color: var(--accent)
+    }
+
+    .cta {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #022;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(6, 182, 212, 0.12);
+      transition: transform .08s ease, box-shadow .12s
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(6, 182, 212, 0.16)
+    }
+
+    .cta:active {
+      transform: translateY(0)
+    }
+
+    .message {
+      margin-top: 14px;
+      color: #ffb4b4;
+      font-size: 14px
+    }
+
+    .results {
+      margin-top: 18px;
+      background: var(--glass-2);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.02)
+    }
+
+    .results h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+      color: var(--muted)
+    }
+
+    ol {
+      padding-left: 18px;
+      margin: 0
+    }
+
+    li {
+      padding: 10px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02)
+    }
+
+    .prod {
+      font-weight: 700
+    }
+
+    .pct {
+      color: var(--accent);
+      font-weight: 800
+    }
+
+    /* make username text the same size as the heading */
+    .small {
+      font-size: 16px;
+      /* match .results h2 */
+      color: var(--muted);
+      margin-left: 6px;
+      font-weight: 600;
+    }
+
+    @media (max-width:520px) {
+      .card {
+        padding: 20px
+      }
+
+      .search-form {
+        flex-direction: column
+      }
+
+      .cta {
+        width: 100%
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card" role="main">
+    <div class="header">
+      <div class="logo">SB</div>
+      <div>
+        <h1>Sentiment-Based Product Recommendations</h1>
+        <div class="subtitle">Personalized top-5 suggestions generated from review sentiment</div>
+      </div>
+    </div>
+
+    <form action="{{ url_for('recommend') }}" method="post" autocomplete="off" class="search-form">
+      <input type="text" id="user_id" name="user_id" placeholder="Enter user id or username" required
+        value="{{ user_id or '' }}">
+      <button type="submit" class="cta">Get top 5 products</button>
+    </form>
+
+    {% if message_display %}
+    <div class="message">{{ message_display }}</div>
+    {% endif %}
+
+    {% if recommendations %}
+    <div class="results">
+      <h2>Top 5 Recommendations {% if user_id %}<span class="small">for {{ user_id }}</span>{% endif %}</h2>
+      <ol>
+        {% for r in recommendations %}
+        <li>
+          <span class="prod">{{ r.name }}</span>
+          <span class="pct">{{ r.positive_sentiment_percent }}%</span>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+
+</html>
